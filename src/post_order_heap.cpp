@@ -54,7 +54,7 @@ void post_order_heap<T, Container, Compare>::heapify(int index, int size_of_subt
 }
 
 template <typename T, typename Container, typename Compare>
-void post_order_heap<T, Container, Compare>::insert(const value_type &element) {
+void post_order_heap<T, Container, Compare>::push(const value_type &element) {
     _container.push_back(element);
     if (_sizes.size() >= _degree) {
         bool should_merge_trees = true;

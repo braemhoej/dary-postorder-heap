@@ -10,7 +10,7 @@ TEST(PostOrderHeap, TestPostOrderHeapCanPush) {
     };
     post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator,2);
     for (int index = 0; index < 30; index++) {
-        heap.insert(index);
+        heap.push(index);
 
     }
     for (int index = 0; index < 30; index++)
@@ -22,7 +22,7 @@ TEST(PostOrderHeapTest, TestInsertAndPop1) {
     };
     post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator,2);
     for (int index = 0; index<1000; index++) {
-        heap.insert(index);
+        heap.push(index);
     }
     for (int index = 0;index < 1000; index++)
         EXPECT_EQ(index, heap.poll());
@@ -33,7 +33,7 @@ TEST(PostOrderHeapTest, TestInsertAndPop2) {
     };
     post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
     for (int index = 10000; index > 0; index--) {
-        heap.insert(rand());
+        heap.push(rand());
     }
     int last = std::numeric_limits<int>::min();
     for (int index = 0; index < 10000; index++) {

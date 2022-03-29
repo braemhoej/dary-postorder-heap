@@ -57,10 +57,10 @@ public:
      */
     post_order_heap(Compare comparator, int degree);
     /**
-     * Inserts element and sorts the underlying container
+     * Pushes and element to the back of the container and ensures that post-order heap-ordering is preserved.
      * @param element to insert
      */
-    void insert(const value_type& element);
+    void push(const value_type& element);
     /**
      * Removes the top element.
      */
