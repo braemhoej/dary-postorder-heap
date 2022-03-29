@@ -69,7 +69,7 @@ public:
      * Returns, and remove, the top element.
      * @return top element.
      */
-    const_reference poll();
+    T poll();
     /**
      * Returns the top element.
      * @return top element
