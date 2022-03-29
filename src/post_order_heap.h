@@ -38,6 +38,10 @@ private:
     void heapify( int index,  int size);
 public:
     /**
+     * Trivial destructor.
+     */
+    ~post_order_heap() = default;
+    /**
      * Default constructor, degree = 2 and standard '<' comparator is used.
      */
     explicit post_order_heap();
@@ -70,7 +74,7 @@ public:
      * Returns the top element.
      * @return top element
      */
-    const T& top();
+    const_reference top();
     /**
      * Checks whether the underlying container is empty.
      * @return

@@ -83,56 +83,60 @@ void post_order_heap<T, Container, Compare>::pop() {
 }
 
 template <typename T, typename Container, typename Compare>
-const T& post_order_heap<T, Container, Compare>::top() {
-    int root_index = _container.size();
+typename Container::const_reference post_order_heap<T, Container, Compare>::top() {
+    int top_index = _container.size() - 1;
     int size = _sizes.back();
-    T prioritised_element = _container[root_index];
-    int next_root_index = root_index - size;
-    for (int sizeIndex = _sizes.size() - _degree; sizeIndex >= 0; sizeIndex--) {
-        int next_size = _sizes[sizeIndex];
-        T element = _container[next_root_index];
-        if (_comparator(element, prioritised_element)) {
-            prioritised_element = element;
+    int root_cursor = top_index - size;
+    for (int size_index = _sizes.size() - _degree; size_index >= 0; size_index--) {
+        int next_size = _sizes[size_index];
+        if (_comparator(_container[root_cursor], _container[top_index])) {
+            top_index = root_cursor;
         }
-        next_root_index -= next_size;
+        root_cursor -= next_size;
     }
-    return prioritised_element;
+    return _container[top_index];
 }
 
 template <typename T, typename Container, typename Compare>
 typename Container::const_reference post_order_heap<T, Container, Compare>::poll() {
-    int root_index = _container.size() - 1;
+    // Initialise top_index as root of rightmost heap, size of rightmost heap, and root cursor as second rightmost heap
+    int top_index = _container.size() - 1;
     int size = _sizes.back();
-    T prioritised_element = _container[root_index];
-    int next_root_index = root_index - size;
-    for (int sizeIndex = _sizes.size() - _degree; sizeIndex >= 0; sizeIndex--) {
-        int next_size = _sizes[sizeIndex];
-        T element = _container[next_root_index];
-        if (_comparator(element, prioritised_element)) {
-            prioritised_element = element;
-            root_index = next_root_index;
+    int root_cursor = top_index - size;
+
+    // Reverse scan the roots of the forest ...
+    for (int size_index = _sizes.size() - _degree; size_index >= 0; size_index--) {
+        int next_size = _sizes[size_index];
+        if (_comparator(_container[root_cursor], _container[top_index])) {
+            top_index = root_cursor;
             size = next_size;
         }
-        next_root_index -= next_size;
+        root_cursor -= next_size;
     }
+
+    // Split rightmost heap at root.
     int size_ = _sizes.back() / _degree;
     _sizes.pop_back();
+
+    // If rightmost heap > 1.
     if (size_) {
         _sizes.push_back(size_);
         _sizes.push_back(size_);
     }
-    T last = _container.back();
-    _container.pop_back();
-    if (root_index < _container.size()) {
-        _container[root_index] = last;
-        heapify(root_index, size);
+
+    // If identified top is not root of rightmost heap...
+    if (top_index < _container.size()) {
+        _container[top_index] = _container.back();
+        heapify(top_index, size);
     }
-    return prioritised_element;
+    // Remove root of rightmost heap.
+    _container.pop_back();
+    return _container[top_index];
 }
 
 template <typename T, typename Container, typename Compare>
 bool post_order_heap<T, Container, Compare>::empty() {
-    return _container.size() == 0;
+    return size() == 0;
 }
 
 template <typename T, typename Container, typename Compare>
