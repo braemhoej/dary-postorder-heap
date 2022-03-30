@@ -69,7 +69,7 @@ Creates a post-order heap with degree two, using std::less<> as the comparator.
     heap.push(13);
     heap.push(42);
     
-    int pop = heap.pop(); // pop = 7
+    int poll = heap.poll(); // poll = 7
     int top = heap.top(); // top = 13
     heap.pop();
     top = top(); // top = 33;
