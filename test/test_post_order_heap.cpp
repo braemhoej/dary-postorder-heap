@@ -54,7 +54,7 @@ TEST(PostOrderHeapTest, ExpectBetterSequentialPushPerformance) {
 
     // Generate numbers
     int* numbers = new int[200000000];
-    srand(4260876546);
+    srand(426086546);
     for (int index = 0; index < 200000000; index++) {
         numbers[index] = rand();
     }
@@ -83,7 +83,7 @@ TEST(PostOrderHeapTest, ExpectBetterSequentialPopPerformance) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 3);
     std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
 
     // Generate numbers & push
