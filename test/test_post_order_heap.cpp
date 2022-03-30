@@ -74,9 +74,6 @@ TEST(PostOrderHeapTest, ExpectBetterSequentialPushPerformance) {
     auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
     EXPECT_TRUE(deltaQueue > deltaHeap);
-
-    std::cout << "Delta heap: " << deltaHeap.count() << " ms" <<'\n';
-    std::cout << "Delta queue: " << deltaQueue.count() << " ms" <<'\n';
 }
 
 TEST(PostOrderHeapTest, ExpectBetterSequentialPopPerformance) {
@@ -112,7 +109,79 @@ TEST(PostOrderHeapTest, ExpectBetterSequentialPopPerformance) {
     auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
     EXPECT_TRUE(deltaQueue > deltaHeap);
+}
 
-    std::cout << "Delta heap: " << deltaHeap.count() << " microseconds" <<'\n';
-    std::cout << "Delta queue: " << deltaQueue.count() << " microseconds" <<'\n';
+TEST(PostOrderHeapTest, ExpectBetterSequentialPollVsTopPopPerformance) {
+    auto comparator = [](int left, int right) {
+        return left < right;
+    };
+    post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
+
+    // Generate numbers & push
+    int* numbers = new int[200000000];
+    srand(4260876546);
+    for (int index = 0; index < 200000000; index++) {
+        numbers[index] = rand();
+    }
+    for (int index = 0; index < 2000000; index++) {
+        heap.push(numbers[index]);
+        queue.push(numbers[index]);
+    }
+
+    // Pop from heap...
+    auto startHeap = std::chrono::high_resolution_clock::now();
+    for (int index = 0; index < 2000000; index++)
+        int poll = heap.poll();
+    auto stopHeap = std::chrono::high_resolution_clock::now();
+    auto deltaHeap = duration_cast<std::chrono::microseconds>(stopHeap - startHeap);
+
+    // Pop from queue
+    auto startQueue = std::chrono::high_resolution_clock::now();
+    for (int index = 0; index < 2000000; index++) {
+        int top = queue.top();
+        queue.pop();
+    }
+    auto stopQueue = std::chrono::high_resolution_clock::now();
+    auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
+
+    EXPECT_TRUE(deltaQueue > deltaHeap);
+}
+TEST(PostOrderHeapTest, ExpectBetterSequentialTopPopPerformance) {
+    auto comparator = [](int left, int right) {
+        return left < right;
+    };
+    post_order_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
+
+    // Generate numbers & push
+    int* numbers = new int[200000000];
+    srand(4260876546);
+    for (int index = 0; index < 200000000; index++) {
+        numbers[index] = rand();
+    }
+    for (int index = 0; index < 2000000; index++) {
+        heap.push(numbers[index]);
+        queue.push(numbers[index]);
+    }
+
+    // Pop from heap...
+    auto startHeap = std::chrono::high_resolution_clock::now();
+    for (int index = 0; index < 2000000; index++) {
+        int top = heap.top();
+        heap.pop();
+    }
+    auto stopHeap = std::chrono::high_resolution_clock::now();
+    auto deltaHeap = duration_cast<std::chrono::microseconds>(stopHeap - startHeap);
+
+    // Pop from queue
+    auto startQueue = std::chrono::high_resolution_clock::now();
+    for (int index = 0; index < 2000000; index++) {
+        int top = queue.top();
+        queue.pop();
+    }
+    auto stopQueue = std::chrono::high_resolution_clock::now();
+    auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
+
+    EXPECT_TRUE(deltaQueue > deltaHeap);
 }
