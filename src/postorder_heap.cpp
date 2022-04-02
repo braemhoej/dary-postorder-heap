@@ -13,20 +13,20 @@
 //
 
 #include <cmath>
-#include "post_order_heap.h"
+#include "postorder_heap.h"
 
 template <typename T, typename Container, typename Compare>
-post_order_heap<T, Container, Compare>::post_order_heap()
-        :   post_order_heap(Compare(), 2) // Constructor delegation
+postorder_heap<T, Container, Compare>::postorder_heap()
+        :   postorder_heap(Compare(), 2) // Constructor delegation
 { }
 
 template <typename T, typename Container, typename Compare>
-post_order_heap<T, Container, Compare>::post_order_heap(Compare compare)
-        :   post_order_heap(compare, 2) // Constructor delegation
+postorder_heap<T, Container, Compare>::postorder_heap(Compare compare)
+        :   postorder_heap(compare, 2) // Constructor delegation
 { }
 
 template <typename T, typename Container, typename Compare>
-post_order_heap<T, Container, Compare>::post_order_heap(Compare compare, int degree)
+postorder_heap<T, Container, Compare>::postorder_heap(Compare compare, int degree)
         :   _container(Container()),
             _comparator(compare),
             _degree(degree),
@@ -34,13 +34,13 @@ post_order_heap<T, Container, Compare>::post_order_heap(Compare compare, int deg
 { }
 
 template <typename T, typename Container, typename Compare>
-void post_order_heap<T, Container, Compare>::heapify(int index, int size_of_subtree) {
+void postorder_heap<T, Container, Compare>::heapify(int index, int size_of_subtree) {
     T initial_root = _container[index];
     while (size_of_subtree > 1) {
         size_of_subtree /= _degree;
         int right_child_index = (index - 1);
         int prioritised_child_index = right_child_index;
-        T prioritised_child = _container[index];
+        T prioritised_child = _container[right_child_index];
         for (int child_offset = 1; child_offset < _degree; child_offset++) {
             int childIndex = right_child_index - (child_offset * size_of_subtree);
             T child = _container[childIndex];
@@ -58,7 +58,7 @@ void post_order_heap<T, Container, Compare>::heapify(int index, int size_of_subt
 }
 
 template <typename T, typename Container, typename Compare>
-void post_order_heap<T, Container, Compare>::push(const value_type &element) {
+void postorder_heap<T, Container, Compare>::push(const value_type &element) {
     _container.push_back(element);
     if (_sizes.size() >= _degree) {
         bool should_merge_trees = true;
@@ -67,7 +67,7 @@ void post_order_heap<T, Container, Compare>::push(const value_type &element) {
             should_merge_trees &= _sizes[tree_index] == _sizes[tree_index - 1];
         }
         if (should_merge_trees) {
-            int size_of_subtree = 1 + _degree * _sizes[_sizes.size()-1];
+            int size_of_subtree = 1 + (_degree * _sizes[_sizes.size()-1]);
             int root_of_subtree = _container.size() - 1;
             for (int index = 0; index < _degree; index++)
                 _sizes.pop_back();
@@ -80,13 +80,13 @@ void post_order_heap<T, Container, Compare>::push(const value_type &element) {
 }
 
 template <typename T, typename Container, typename Compare>
-void post_order_heap<T, Container, Compare>::pop() {
+void postorder_heap<T, Container, Compare>::pop() {
     // TODO: Improve performance of top / pop combo.
     poll();
 }
 
 template <typename T, typename Container, typename Compare>
-typename Container::const_reference post_order_heap<T, Container, Compare>::top() {
+typename Container::const_reference postorder_heap<T, Container, Compare>::top() {
     // Initialise prioritised_root_index as root of rightmost heap, size of rightmost heap, and root cursor as second rightmost heap
     int prioritised_root_index = _container.size() - 1;
     int root_cursor = prioritised_root_index - _sizes.back();
@@ -103,7 +103,7 @@ typename Container::const_reference post_order_heap<T, Container, Compare>::top(
 }
 
 template <typename T, typename Container, typename Compare>
-T post_order_heap<T, Container, Compare>::poll() {
+T postorder_heap<T, Container, Compare>::poll() {
     // Initialise prioritised_root_index as root of rightmost heap, size of rightmost heap, and root cursor as second rightmost heap
     int prioritised_root_index = _container.size() - 1;
     int size = _sizes.back();
@@ -144,11 +144,11 @@ T post_order_heap<T, Container, Compare>::poll() {
 }
 
 template <typename T, typename Container, typename Compare>
-bool post_order_heap<T, Container, Compare>::empty() {
+bool postorder_heap<T, Container, Compare>::empty() {
     return size() == 0;
 }
 
 template <typename T, typename Container, typename Compare>
-typename Container::size_type post_order_heap<T, Container, Compare>::size() {
+typename Container::size_type postorder_heap<T, Container, Compare>::size() {
     return _container.size();
 }

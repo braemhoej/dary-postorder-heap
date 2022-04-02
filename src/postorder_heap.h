@@ -11,13 +11,13 @@
 // Adapted by Nicolaj Kuno Bræmhøj for variable degree.
 // Contact: nicolaj (at) braemhoej (dot) me
 //
-#ifndef DARYPOSTORDERHEAP_LIBRARY_HPP
-#define DARYPOSTORDERHEAP_LIBRARY_HPP
+#ifndef POSTORDER_HEAP_LIBRARY_HPP
+#define POSTORDER_HEAP_LIBRARY_HPP
 
 #include <vector>
 #include <functional>
 
-template <class T, class Container = std::vector<T>, class Compare = std::less<typename Container::value_type>> class post_order_heap {
+template <class T, class Container = std::vector<T>, class Compare = std::less<typename Container::value_type>> class postorder_heap {
     typedef typename Container::size_type size_type;
     typedef typename Container::value_type value_type;
     typedef typename Container::const_reference const_reference;
@@ -40,22 +40,22 @@ public:
     /**
      * Trivial destructor.
      */
-    ~post_order_heap() = default;
+    ~postorder_heap() = default;
     /**
      * Default constructor, degree = 2 and standard '<' comparator is used.
      */
-    explicit post_order_heap();
+    explicit postorder_heap();
     /**
      * Constructor with custom comparator and degree = 2;
      * @param comparator
      */
-    post_order_heap(Compare comparator);
+    postorder_heap(Compare comparator);
     /**
      * Constructor with custom comparator and specified degree.
      * @param comparator
      * @param degree
      */
-    post_order_heap(Compare comparator, int degree);
+    postorder_heap(Compare comparator, int degree);
     /**
      * Pushes and element to the back of the container and ensures that post-order heap-ordering is preserved.
      * @param element to insert
