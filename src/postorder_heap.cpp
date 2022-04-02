@@ -89,14 +89,18 @@ template <typename T, typename Container, typename Compare>
 typename Container::const_reference postorder_heap<T, Container, Compare>::top() {
     // Initialise prioritised_root_index as root of rightmost heap, size of rightmost heap, and root cursor as second rightmost heap
     int prioritised_root_index = _container.size() - 1;
-    int root_cursor = prioritised_root_index - _sizes.back();
-    T largest_root = _container[prioritised_root_index];
+    int size = _sizes.back();
+    int root_cursor = prioritised_root_index - size;
+    T prioritised_root = _container[prioritised_root_index];
+
     // Reverse scan the roots of the forest ...
     for (int size_index = _sizes.size() - _degree; size_index >= 0; size_index--) {
         int next_size = _sizes[size_index];
-        T root = _container[root_cursor];
-        if (_comparator(root, largest_root))
+        T element = _container[root_cursor];
+        if (_comparator(element, prioritised_root)) {
+            prioritised_root = element;
             prioritised_root_index = root_cursor;
+        }
         root_cursor -= next_size;
     }
     return _container[prioritised_root_index];
