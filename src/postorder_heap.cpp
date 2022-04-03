@@ -67,7 +67,7 @@ void postorder_heap<T, Container, Compare>::push(const value_type &element) {
             should_merge_trees &= _sizes[tree_index] == _sizes[tree_index - 1];
         }
         if (should_merge_trees) {
-            int size_of_subtree = 1 + (_degree * _sizes[_sizes.size()-1]);
+            int size_of_subtree = 1 + (_degree * _sizes.back());
             int root_of_subtree = _container.size() - 1;
             for (int index = 0; index < _degree; index++)
                 _sizes.pop_back();
@@ -94,7 +94,7 @@ typename Container::const_reference postorder_heap<T, Container, Compare>::top()
     T prioritised_root = _container[prioritised_root_index];
 
     // Reverse scan the roots of the forest ...
-    for (int size_index = _sizes.size() - _degree; size_index >= 0; size_index--) {
+    for (int size_index = _sizes.size() - 2; size_index >= 0; size_index--) {
         int next_size = _sizes[size_index];
         T element = _container[root_cursor];
         if (_comparator(element, prioritised_root)) {
@@ -115,7 +115,7 @@ T postorder_heap<T, Container, Compare>::poll() {
     T prioritised_root = _container[prioritised_root_index];
 
     // Reverse scan the roots of the forest ...
-    for (int size_index = _sizes.size() - _degree; size_index >= 0; size_index--) {
+    for (int size_index = _sizes.size() - 2; size_index >= 0; size_index--) {
         int next_size = _sizes[size_index];
         T element = _container[root_cursor];
         if (_comparator(element, prioritised_root)) {

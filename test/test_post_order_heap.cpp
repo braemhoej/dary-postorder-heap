@@ -6,6 +6,20 @@
 #include "gtest/gtest.h"
 #include "../src/postorder_heap.cpp"
 
+TEST(PostOrderHeap, Print) {
+    auto comparator = [](int left, int right) {
+        return left < right;
+    };
+    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 3);
+    for (int index = 0; index < 100; index++)
+        heap.push(rand());
+
+    for (int index = 0; index < 100; index++) {
+        std::cout << std::to_string(heap.top()) << '\n';
+        heap.pop();
+    }
+}
+
 TEST(PostOrderHeap, TestPushIncreasesSize) {
     auto comparator = [](int left, int right) {
         return left < right;
@@ -87,7 +101,7 @@ TEST(PostOrderHeapTest, TestSequentialTopExtractionsReturnDecreasingPriority2) {
     auto comparator = [](int left, int right) {
         return left > right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 3);
     for (int index = 0; index < 1000000; index++) {
         heap.push(rand());
     }
