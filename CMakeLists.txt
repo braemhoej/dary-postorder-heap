@@ -13,11 +13,29 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+
+
+cmake_minimum_required(VERSION 3.21)
+project(postorder_heap)
+project(postorder_heap VERSION 1.0.0 )
+set(CMAKE_CXX_STANDARD 20)
+include(GNUInstallDirs)
+add_library(postorder_heap SHARED src/postorder_heap.cpp include/postorder_heap.h)
+
+target_include_directories(postorder_heap PRIVATE include)
+target_include_directories(postorder_heap PRIVATE src)
+
+set_target_properties(postorder_heap PROPERTIES PUBLIC_HEADER include/postorder_heap.h)
+set_target_properties(postorder_heap PROPERTIES VERSION ${PROJECT_VERSION})
+
+install(TARGETS postorder_heap
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 ########################
 ##   Unit Testing    ###
 ########################
 
-add_library(postorder_heap STATIC src/postorder_heap.h src/postorder_heap.cpp)
 add_executable( test_postorder_heap test/test_post_order_heap.cpp test/test_performance.cpp)
 # Link test executable against gtest & gtest_main
 

@@ -13,7 +13,7 @@
 //
 
 #include <cmath>
-#include "postorder_heap.h"
+#include "../include/postorder_heap.h"
 
 template <typename T, typename Container, typename Compare>
 postorder_heap<T, Container, Compare>::postorder_heap()
