@@ -4,7 +4,7 @@
 #include <chrono>
 #include <queue>
 #include "gtest/gtest.h"
-#include "../src/postorder_heap.cpp"
+#include "../src/post-order_heap.hpp"
 
 TEST(PerformanceTest, ExpectBetterSequentialPushPerformance) {
 auto comparator = [](int left, int right) {

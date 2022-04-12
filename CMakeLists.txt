@@ -13,12 +13,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_library(postorder_heap STATIC src/postorder_heap.cpp include/postorder_heap.h)
+add_library(postorder_heap STATIC src/post-order_heap.hpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER include/postorder_heap.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 
 
