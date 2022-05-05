@@ -144,5 +144,5 @@ queue.pop();
 auto stopQueue = std::chrono::high_resolution_clock::now();
 auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
-EXPECT_TRUE(deltaQueue > deltaHeap);
+EXPECT_GT(deltaQueue, deltaHeap);
 }
