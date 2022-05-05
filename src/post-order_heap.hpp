@@ -47,15 +47,15 @@ private:
                 T child = _container[childIndex];
                 if (_comparator(child, prioritised_child)) {
                     prioritised_child_index = childIndex;
-                    prioritised_child = child;
+                    prioritised_child = std::move(child);
                 }
             }
             if (!_comparator(prioritised_child, initial_root))
                 break;
-            _container[index] = prioritised_child;
+            _container[index] = std::move(prioritised_child);
             index = prioritised_child_index;
         }
-        _container[index] = initial_root;
+        _container[index] = std::move(initial_root);
     }
 public:
     /**
@@ -131,7 +131,7 @@ public:
             int next_size = _sizes[size_index];
             T element = _container[root_cursor];
             if (_comparator(element, prioritised_root)) {
-                prioritised_root = element;
+                prioritised_root = std::move(element);
                 prioritised_root_index = root_cursor;
                 size = next_size;
             }
@@ -152,7 +152,7 @@ public:
         _container.pop_back();
         // If identified top is not root of rightmost heap...
         if (prioritised_root_index < _container.size()) {
-            _container[prioritised_root_index] = last;
+            _container[prioritised_root_index] = std::move(last);
             heapify(prioritised_root_index, size);
         }
 
@@ -174,7 +174,7 @@ public:
             int next_size = _sizes[size_index];
             T element = _container[root_cursor];
             if (_comparator(element, prioritised_root)) {
-                prioritised_root = element;
+                prioritised_root = std::move(element);
                 prioritised_root_index = root_cursor;
             }
             root_cursor -= next_size;
