@@ -10,7 +10,7 @@ TEST(PerformanceTest, ExpectBetterSequentialPushPerformance) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
 
     // Generate numbers
@@ -35,13 +35,16 @@ TEST(PerformanceTest, ExpectBetterSequentialPushPerformance) {
     auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
     EXPECT_TRUE(deltaQueue > deltaHeap);
+    if (! (deltaQueue > deltaHeap)) {
+        std::cout << "Delta Queue : " << deltaQueue.count() << " and " << " Delta Heap " << deltaHeap.count() << "\n";
+    }
 }
 
 TEST(PerformanceTest, ExpectBetterSequentialPopPerformance) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 3);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
 
     // Generate numbers & push
@@ -69,14 +72,17 @@ TEST(PerformanceTest, ExpectBetterSequentialPopPerformance) {
     auto stopQueue = std::chrono::high_resolution_clock::now();
     auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
-    EXPECT_TRUE(deltaQueue > deltaHeap);
+    EXPECT_GE(deltaQueue, deltaHeap);
+    if (! (deltaQueue > deltaHeap)) {
+        std::cout << "Delta Queue : " << deltaQueue.count() << " and " << " Delta Heap " << deltaHeap.count() << "\n";
+    }
 }
 
 TEST(PerformanceTest, ExpectBetterSequentialPollVsTopPopPerformance) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
 
     // Generate numbers & push
@@ -106,13 +112,16 @@ TEST(PerformanceTest, ExpectBetterSequentialPollVsTopPopPerformance) {
     auto stopQueue = std::chrono::high_resolution_clock::now();
     auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
-    EXPECT_TRUE(deltaQueue > deltaHeap);
+    EXPECT_GE(deltaQueue, deltaHeap);
+    if (! (deltaQueue > deltaHeap)) {
+        std::cout << "Delta Queue : " << deltaQueue.count() << " and " << " Delta Heap " << deltaHeap.count() << "\n";
+    }
 }
 TEST(PerformanceTest, ExpectBetterSequentialTopPopPerformance) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     std::priority_queue<int, std::vector<int>, decltype(comparator)> queue(comparator);
 
     // Generate numbers & push
@@ -144,5 +153,8 @@ TEST(PerformanceTest, ExpectBetterSequentialTopPopPerformance) {
     auto stopQueue = std::chrono::high_resolution_clock::now();
     auto deltaQueue = duration_cast<std::chrono::microseconds>(stopQueue - startQueue);
 
-    EXPECT_GT(deltaQueue, deltaHeap);
+    EXPECT_GE(deltaQueue, deltaHeap);
+    if (! (deltaQueue > deltaHeap)) {
+        std::cout << "Delta Queue : " << deltaQueue.count() << " and " << " Delta Heap " << deltaHeap.count() << "\n";
+    }
 }

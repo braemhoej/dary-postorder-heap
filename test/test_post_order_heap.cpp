@@ -10,7 +10,7 @@ TEST(PostOrderHeap, Print) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 3);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     for (int index = 0; index < 100; index++)
         heap.push(rand());
 
@@ -24,7 +24,7 @@ TEST(PostOrderHeap, TestPushIncreasesSize) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     for (int index = 0; index < 100; index++) {
         EXPECT_EQ(heap.size(), index);
         heap.push(rand());
@@ -36,7 +36,7 @@ TEST(PostOrderHeap, TestPopDecreasesSize) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     for (int index = 0; index < 100; index++) {
         heap.push(rand());
     }
@@ -51,7 +51,7 @@ TEST(PostOrderHeapTest, TestTopDoesntDecreaseSize) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     for (int index = 0; index < 100; index++) {
         heap.push(rand());
     }
@@ -67,7 +67,7 @@ TEST(PostOrderHeap, TestEmptyIsTrueIfEmpty) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     EXPECT_TRUE(heap.empty());
     for (int index = 0; index < 100; index++) {
         heap.push(rand());
@@ -85,7 +85,7 @@ TEST(PostOrderHeapTest, TestSequentialTopExtractionsReturnDecreasingPriority) {
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 2);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     for (int index = 0; index < 1000; index++) {
         heap.push(rand());
     }
@@ -101,7 +101,7 @@ TEST(PostOrderHeapTest, TestSequentialTopExtractionsReturnDecreasingPriority2) {
     auto comparator = [](int left, int right) {
         return left > right;
     };
-    postorder_heap<int, std::vector<int>, decltype(comparator)> heap(comparator, 3);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
     for (int index = 0; index < 1000000; index++) {
         heap.push(rand());
     }
