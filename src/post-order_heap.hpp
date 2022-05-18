@@ -24,37 +24,37 @@ class postorder_heap {
     typedef typename Container::const_reference const_reference;
 private:
     // The underlying container
-    Container _container;
+    Container container_;
     // Comparator used for comparisons
-    Compare _comparator;
+    Compare comparator_;
     // Sizes of the implicit heaps.
-    std::vector<int> _sizes;
+    std::vector<int> sizes_;
     /**
      *
      * @param index
      * @param size
      */
     void heapify(int index, int size_of_subtree) {
-        T initial_root = _container[index];
+        T initial_root = container_[index];
         while (size_of_subtree > 1) {
             size_of_subtree /= degree;
             int right_child_index = (index - 1);
             int prioritised_child_index = right_child_index;
-            T prioritised_child = _container[right_child_index];
+            T prioritised_child = container_[right_child_index];
             for (int child_offset = 1; child_offset < degree; child_offset++) {
                 int childIndex = right_child_index - (child_offset * size_of_subtree);
-                T child = _container[childIndex];
-                if (_comparator(child, prioritised_child)) {
+                T child = container_[childIndex];
+                if (comparator_(child, prioritised_child)) {
                     prioritised_child_index = childIndex;
                     prioritised_child = child;
                 }
             }
-            if (!_comparator(prioritised_child, initial_root))
+            if (!comparator_(prioritised_child, initial_root))
                 break;
-            _container[index] = prioritised_child;
+            container_[index] = prioritised_child;
             index = prioritised_child_index;
         }
-        _container[index] = initial_root;
+        container_[index] = initial_root;
     }
 public:
     /**
@@ -72,9 +72,9 @@ public:
      * @param degree
      */
     postorder_heap(Compare comparator) :
-    _container(Container()),
-                                                               _comparator(comparator),
-                                                               _sizes(std::vector<int>())
+    container_(Container()),
+                                                               comparator_(comparator),
+                                                               sizes_(std::vector<int>())
     { }
 
     /**
@@ -82,24 +82,24 @@ public:
      * @param element to insert
      */
     void push(const value_type &element) {
-        _container.push_back(element);
-        if (_sizes.size() >= degree) {
+        container_.push_back(element);
+        if (sizes_.size() >= degree) {
             bool should_merge_trees = true;
             for (int offset = 1; offset < degree; offset++) {
-                int tree_index = _sizes.size() - offset;
-                should_merge_trees &= _sizes[tree_index] == _sizes[tree_index - 1];
+                int tree_index = sizes_.size() - offset;
+                should_merge_trees &= sizes_[tree_index] == sizes_[tree_index - 1];
             }
             if (should_merge_trees) {
-                int size_of_subtree = 1 + (degree * _sizes.back());
-                int root_of_subtree = _container.size() - 1;
+                int size_of_subtree = 1 + (degree * sizes_.back());
+                int root_of_subtree = container_.size() - 1;
                 for (int index = 0; index < degree; index++)
-                    _sizes.pop_back();
-                _sizes.push_back(size_of_subtree);
+                    sizes_.pop_back();
+                sizes_.push_back(size_of_subtree);
                 heapify(root_of_subtree, size_of_subtree);
                 return;
             }
         }
-        _sizes.push_back(1);
+        sizes_.push_back(1);
     }
     /**
      * Removes the top element.
@@ -113,16 +113,16 @@ public:
      */
     T poll() {
         // Initialise prioritised_root_index as root of rightmost heap, size of rightmost heap, and root cursor as second rightmost heap
-        int prioritised_root_index = _container.size() - 1;
-        int size = _sizes.back();
+        int prioritised_root_index = container_.size() - 1;
+        int size = sizes_.back();
         int root_cursor = prioritised_root_index - size;
-        T prioritised_root = _container[prioritised_root_index];
+        T prioritised_root = container_[prioritised_root_index];
 
         // Reverse scan the roots of the forest ...
-        for (int size_index = _sizes.size() - 2; size_index >= 0; size_index--) {
-            int next_size = _sizes[size_index];
-            T element = _container[root_cursor];
-            if (_comparator(element, prioritised_root)) {
+        for (int size_index = sizes_.size() - 2; size_index >= 0; size_index--) {
+            int next_size = sizes_[size_index];
+            T element = container_[root_cursor];
+            if (comparator_(element, prioritised_root)) {
                 prioritised_root = element;
                 prioritised_root_index = root_cursor;
                 size = next_size;
@@ -131,20 +131,20 @@ public:
         }
 
         // Split rightmost heap at root.
-        int size_of_subtree = _sizes.back() / degree;
-        _sizes.pop_back();
+        int size_of_subtree = sizes_.back() / degree;
+        sizes_.pop_back();
 
         // If rightmost heap > 1.
         if (size_of_subtree) {
             for (int index = 0; index < degree; index++)
-                _sizes.push_back(size_of_subtree);
+                sizes_.push_back(size_of_subtree);
         }
         // Remove root of rightmost heap.
-        T last = _container.back();
-        _container.pop_back();
+        T last = container_.back();
+        container_.pop_back();
         // If identified top is not root of rightmost heap...
-        if (prioritised_root_index < _container.size()) {
-            _container[prioritised_root_index] = last;
+        if (prioritised_root_index < container_.size()) {
+            container_[prioritised_root_index] = last;
             heapify(prioritised_root_index, size);
         }
 
@@ -156,36 +156,44 @@ public:
      */
     const_reference top() {
         // Initialise prioritised_root_index as root of rightmost heap, size of rightmost heap, and root cursor as second rightmost heap
-        int prioritised_root_index = _container.size() - 1;
-        int size = _sizes.back();
+        int prioritised_root_index = container_.size() - 1;
+        int size = sizes_.back();
         int root_cursor = prioritised_root_index - size;
-        T prioritised_root = _container[prioritised_root_index];
+        T prioritised_root = container_[prioritised_root_index];
 
         // Reverse scan the roots of the forest ...
-        for (int size_index = _sizes.size() - 2; size_index >= 0; size_index--) {
-            int next_size = _sizes[size_index];
-            T element = _container[root_cursor];
-            if (_comparator(element, prioritised_root)) {
+        for (int size_index = sizes_.size() - 2; size_index >= 0; size_index--) {
+            int next_size = sizes_[size_index];
+            T element = container_[root_cursor];
+            if (comparator_(element, prioritised_root)) {
                 prioritised_root = element;
                 prioritised_root_index = root_cursor;
             }
             root_cursor -= next_size;
         }
-        return _container[prioritised_root_index];
+        return container_[prioritised_root_index];
     }
     /**
      * Checks whether the underlying container is empty.
      * @return
      */
     bool empty() {
-        return _container.empty();
+        return container_.empty();
     }
     /**
      * Returns the size of the underlying container.
      * @return
      */
     size_type size() {
-        return _container.size();
+        return container_.size();
+    }
+
+    void reserve(size_type new_cap) {
+        container_.reserve(new_cap);
+    }
+
+    void clear() {
+        container_.clear();
     }
 };
 
