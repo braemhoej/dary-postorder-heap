@@ -45,7 +45,7 @@ All necessary parameters are supplied. Creates a post-order heap with the specif
 **The implicit constructor**
 
 ```cpp
-    post_order_heap<3, int, std::vector<int>, std::less<>> heap{};
+    post_order_heap<3, int> heap{};
 ```
 Creates a post-order heap with the specified degree (here 3) using std::less<> as the comparator.
 
