@@ -23,10 +23,10 @@ TEST(PostOrderHeap, TestPopDecreasesSize) {
         return left < right;
     };
     postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
-    for (int index = 0; index < 100; index++) {
+    for (int index = 0; index < 4; index++) {
         heap.push(rand());
     }
-    for (int index = 100; index > 0; index--) {
+    for (int index = 4; index > 0; index--) {
         EXPECT_EQ(heap.size(), index);
         heap.pop();
         EXPECT_EQ(heap.size(), index - 1);
