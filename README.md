@@ -19,7 +19,7 @@ template <
           class T, 
           class Container = std::vector<T>, 
           class Compare = std::less<typename Container::value_type>
-> class post_order_heap
+> class postorder_heap
 ```
 #### Template parameters
   1. **degree** - Integer specifying the degree of the constructed post-order heap.
@@ -37,7 +37,7 @@ Construction of heaps can happen using the following three kinds of constructors
     auto comparator = [](int left, int right) {
         return left < right;
     };
-    post_order_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
+    postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
 ```
 
 All necessary parameters are supplied. Creates a post-order heap with the specified degree (here 3), and a custom comparator.
@@ -52,7 +52,7 @@ Creates a post-order heap with the specified degree (here 3) using std::less<> a
 ### Push, Poll, Pop & Top
 
 ```cpp
-    post_order_heap<2, int, std::vector<int>, std::less<>> heap{};
+    postorder_heap<2, int, std::vector<int>, std::less<>> heap{};
     
     heap.push(7);
     heap.push(33);
