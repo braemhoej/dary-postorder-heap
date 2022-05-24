@@ -11,6 +11,7 @@
 // Adapted by Nicolaj Kuno Bræmhøj for variable degree.
 // Contact: nicolaj (at) braemhoej (dot) me
 //
+
 #ifndef POSTORDER_HEAP_LIBRARY_HPP
 #define POSTORDER_HEAP_LIBRARY_HPP
 
@@ -64,9 +65,25 @@ public:
      */
     size_type size();
 
+    /**
+     * @brief Sets the capacity of the underlying container.
+     * 
+     * @param new_cap the number of elements to reserve space for in the container.
+     */
     void reserve(size_type new_cap);
 
+    /**
+     * @brief Clears the underlying container.
+     * 
+     */
     void clear();
+
+    /**
+     * @brief Operator for setting the underlying container.
+     * 
+     * @param container 
+     */
+    void operator=(Container container);
 private:
     // The underlying container
     Container container_;
@@ -131,24 +148,30 @@ void postorder_heap<degree, T, Container, Compare> ::heapify(int root, int size)
 template <int degree, class T, class Container, class Compare> 
 void postorder_heap<degree, T, Container, Compare>::push(const value_type &element) {
     container_.push_back(element);
+    bool merge_trees = true;
+
+    // Determine if trees should be merged.
     if (sizes_.size() >= degree) {
-        bool should_merge_trees = true;
         for (int offset = 1; offset < degree; offset++) {
             int tree_index = sizes_.size() - offset;
-            should_merge_trees &= sizes_[tree_index] == sizes_[tree_index - 1];
+            merge_trees &= sizes_[tree_index] == sizes_[tree_index - 1];
         }
-        if (should_merge_trees) {
-            int size_of_subtree = 1 + (degree * sizes_.back());
-            int root_of_subtree = container_.size() - 1;
-            for (int index = 0; index < degree; index++)
-                sizes_.pop_back();
-            sizes_.push_back(size_of_subtree);
-            heapify(root_of_subtree, size_of_subtree);
-            return;
-        }
+    } else {
+        merge_trees = false;
+    }
+
+    // Do (or don't) merge
+    if (merge_trees) {
+        int size_of_subtree = 1 + (degree * sizes_.back());
+        int root_of_subtree = container_.size() - 1;
+        for (int index = 0; index < degree; index++)
+            sizes_.pop_back();
+        sizes_.push_back(size_of_subtree);
+        heapify(root_of_subtree, size_of_subtree);
+    } else {
+        sizes_.push_back(1);
     }
     prioritised_root_invalidated_ = true;
-    sizes_.push_back(1);
 }
 
 template <int degree, class T, class Container, class Compare> 
@@ -226,4 +249,11 @@ void postorder_heap<degree, T, Container, Compare>::clear()
 {
     container_.clear();
 }
+
+template <int degree, class T, class Container, class Compare> 
+void postorder_heap<degree, T, Container, Compare>::operator=(Container container) 
+{
+    container_ = container;
+}
+
 #endif //DARYPOSTORDERHEAP_LIBRARY_HPP
