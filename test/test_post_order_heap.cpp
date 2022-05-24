@@ -72,7 +72,7 @@ TEST(PostOrderHeapTest, TestSequentialTopExtractionsReturnDecreasingPriority) {
         return left < right;
     };
     postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
-    for (int index = 0; index < 1000; index++) {
+    for (int index = 0; index < 10000000; index++) {
         heap.push(rand());
     }
     int last = std::numeric_limits<int>::min();
@@ -88,14 +88,20 @@ TEST(PostOrderHeapTest, TestSequentialTopExtractionsReturnDecreasingPriority2) {
         return left > right;
     };
     postorder_heap<3, int, std::vector<int>, decltype(comparator)> heap(comparator);
-    for (int index = 0; index < 1000000; index++) {
-        heap.push(rand());
+    int exp_sum = 0;
+    for (int index = 0; index < 10000000; index++) {
+        int number = rand();
+        heap.push(number);
+        exp_sum += number;
     }
+    int sum = 0;
     int last = std::numeric_limits<int>::max();
-    for (int index = 1000000; index > 0; index--) {
+    for (int index = 10000000; index > 0; index--) {
         int top = heap.top();
+        sum += top;
         heap.pop();
         EXPECT_TRUE(top <= last);
         last = top;
     }
+    EXPECT_EQ(exp_sum, sum);
 }
