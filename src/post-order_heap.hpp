@@ -35,26 +35,26 @@ private:
      * @param size
      */
     void heapify(int index, int size_of_subtree) {
-        T initial_root = container_[index];
+        T initial_root = std::move(container_[index]);
         while (size_of_subtree > 1) {
             size_of_subtree /= degree;
             int right_child_index = (index - 1);
             int prioritised_child_index = right_child_index;
-            T prioritised_child = container_[right_child_index];
+            T prioritised_child = std::move(container_[right_child_index]);
             for (int child_offset = 1; child_offset < degree; child_offset++) {
                 int childIndex = right_child_index - (child_offset * size_of_subtree);
-                T child = container_[childIndex];
+                const_reference child = container_[childIndex];
                 if (comparator_(child, prioritised_child)) {
                     prioritised_child_index = childIndex;
-                    prioritised_child = child;
+                    prioritised_child = std::move(child);
                 }
             }
             if (!comparator_(prioritised_child, initial_root))
                 break;
-            container_[index] = prioritised_child;
+            container_[index] = std::move(prioritised_child);
             index = prioritised_child_index;
         }
-        container_[index] = initial_root;
+        container_[index] = std::move(initial_root);
     }
 public:
     /**
@@ -121,9 +121,9 @@ public:
         // Reverse scan the roots of the forest ...
         for (int size_index = sizes_.size() - 2; size_index >= 0; size_index--) {
             int next_size = sizes_[size_index];
-            T element = container_[root_cursor];
-            if (comparator_(element, prioritised_root)) {
-                prioritised_root = element;
+            const_reference root = container_[root_cursor];
+            if (comparator_(root, prioritised_root)) {
+                prioritised_root = root;
                 prioritised_root_index = root_cursor;
                 size = next_size;
             }
@@ -144,7 +144,7 @@ public:
         container_.pop_back();
         // If identified top is not root of rightmost heap...
         if (prioritised_root_index < container_.size()) {
-            container_[prioritised_root_index] = last;
+            container_[prioritised_root_index] = std::move(last);
             heapify(prioritised_root_index, size);
         }
 
@@ -164,9 +164,9 @@ public:
         // Reverse scan the roots of the forest ...
         for (int size_index = sizes_.size() - 2; size_index >= 0; size_index--) {
             int next_size = sizes_[size_index];
-            T element = container_[root_cursor];
-            if (comparator_(element, prioritised_root)) {
-                prioritised_root = element;
+            const_reference root = container_[root_cursor];
+            if (comparator_(root, prioritised_root)) {
+                prioritised_root = root;
                 prioritised_root_index = root_cursor;
             }
             root_cursor -= next_size;
