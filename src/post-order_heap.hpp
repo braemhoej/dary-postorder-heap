@@ -137,12 +137,12 @@ void postorder_heap<degree, T, Container, Compare> ::heapify(int root, int size)
                 prioritised_child = child;
             }
         }
-        if (!comparator_(prioritised_child, initial_root))
+        if (comparator_(initial_root, prioritised_child))
             break;
-        container_[root] = prioritised_child;
+        container_[root] = std::move(prioritised_child);
         root = prioritised_child_index;
     }
-    container_[root] = initial_root;
+    container_[root] = std::move(initial_root);
 }
 
 template <int degree, class T, class Container, class Compare> 
@@ -193,7 +193,7 @@ void postorder_heap<degree, T, Container, Compare>::pop()
 
     // If identified top is not root of rightmost heap...
     if (prioritised_root_index_ < container_.size() - 1) {
-        container_[prioritised_root_index_] = container_.back();
+        container_[prioritised_root_index_] = std::move(container_.back());
         heapify(prioritised_root_index_, prioritised_root_size_);
     }
 
@@ -221,9 +221,9 @@ postorder_heap<degree, T, Container, Compare>::const_reference postorder_heap<de
 template <int degree, class T, class Container, class Compare> 
 T postorder_heap<degree, T, Container, Compare>::poll() 
 {
-    T value = top();
+    T top = top();
     pop();
-    return value;
+    return std::move(top);
 }
 
 template <int degree, class T, class Container, class Compare> 
