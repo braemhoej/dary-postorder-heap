@@ -128,9 +128,10 @@ void postorder_heap<degree, T, Container, Compare> ::heapify(int root, int size)
         size /= degree;
         int right_child_index = (root - 1);
         int left_child_index = right_child_index - ((degree - 1) * size);
-        int prioritised_child_index = right_child_index;
-        T prioritised_child = container_[right_child_index];
-        for (int child_index = left_child_index; child_index <= right_child_index; child_index += size) {
+        int prioritised_child_index = left_child_index;
+        T prioritised_child = container_[left_child_index];
+        for (int i = 1; i < degree; i++) {
+            int child_index = left_child_index + (i * size);
             const_reference child = container_[child_index];
             if (comparator_(child, prioritised_child)) {
                 prioritised_child_index = child_index;
