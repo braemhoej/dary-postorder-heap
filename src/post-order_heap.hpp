@@ -18,12 +18,12 @@
 #include <vector>
 #include <functional>
 
-template <int degree, class T, class Container = std::vector<T>, class Compare = std::less<typename Container::value_type>> 
+template <int degree, class T, class container = std::vector<T>, class compare = std::less<typename container::value_type>> 
 class postorder_heap {
 public:
-    typedef typename Container::size_type size_type;
-    typedef typename Container::value_type value_type;
-    typedef typename Container::const_reference const_reference;
+    typedef typename container::size_type size_type;
+    typedef typename container::value_type value_type;
+    typedef typename container::const_reference const_reference;
     /**
      * Default constructor, degree = 2 and standard '<' comparator is used.
      */
@@ -33,7 +33,7 @@ public:
      * @param comparator
      * @param degree
      */
-    postorder_heap(Compare comparator);
+    postorder_heap(compare comparator);
 
     /**
      * Pushes and element to the back of the container and ensures that post-order heap-ordering is preserved.
@@ -83,12 +83,12 @@ public:
      * 
      * @param container 
      */
-    void operator=(Container container);
+    void operator=(container container);
 private:
     // The underlying container
-    Container container_;
+    container container_;
     // Comparator used for comparisons
-    Compare comparator_;
+    compare comparator_;
     // Sizes of the implicit heaps.
     std::vector<int> sizes_;
     // Index of last located most prioritised root.
@@ -105,15 +105,15 @@ private:
     void heapify(int index, int size_of_subtree);
 };
 
-template <int degree, class T, class Container, class Compare> 
-postorder_heap<degree, T, Container, Compare> ::postorder_heap() : postorder_heap(Compare()) // Constructor delegation
+template <int degree, class T, class container, class compare> 
+postorder_heap<degree, T, container, compare> ::postorder_heap() : postorder_heap(compare()) // Constructor delegation
 { 
 
 }
 
-template <int degree, class T, class Container, class Compare> 
-postorder_heap<degree, T, Container, Compare> ::postorder_heap(Compare comparator) :
-    container_(Container()),
+template <int degree, class T, class container, class compare> 
+postorder_heap<degree, T, container, compare> ::postorder_heap(compare comparator) :
+    container_(container()),
     comparator_(comparator),
     sizes_(std::vector<int>()),
     prioritised_root_invalidated_(true)
@@ -121,8 +121,8 @@ postorder_heap<degree, T, Container, Compare> ::postorder_heap(Compare comparato
 
 }
 
-template <int degree, class T, class Container, class Compare> 
-void postorder_heap<degree, T, Container, Compare> ::heapify(int root, int size) {
+template <int degree, class T, class container, class compare> 
+void postorder_heap<degree, T, container, compare> ::heapify(int root, int size) {
     T initial_root = container_[root];
     while (size > 1) {
         size /= degree;
@@ -146,8 +146,8 @@ void postorder_heap<degree, T, Container, Compare> ::heapify(int root, int size)
     container_[root] = std::move(initial_root);
 }
 
-template <int degree, class T, class Container, class Compare> 
-void postorder_heap<degree, T, Container, Compare>::push(const value_type &element) {
+template <int degree, class T, class container, class compare> 
+void postorder_heap<degree, T, container, compare>::push(const value_type &element) {
     container_.push_back(element);
     bool merge_trees = true;
 
@@ -175,8 +175,8 @@ void postorder_heap<degree, T, Container, Compare>::push(const value_type &eleme
     prioritised_root_invalidated_ = true;
 }
 
-template <int degree, class T, class Container, class Compare> 
-void postorder_heap<degree, T, Container, Compare>::pop() 
+template <int degree, class T, class container, class compare> 
+void postorder_heap<degree, T, container, compare>::pop() 
 {
     if (prioritised_root_invalidated_) {
         top();
@@ -202,8 +202,8 @@ void postorder_heap<degree, T, Container, Compare>::pop()
     prioritised_root_invalidated_ = true;
 }
 
-template <int degree, class T, class Container, class Compare> 
-postorder_heap<degree, T, Container, Compare>::const_reference postorder_heap<degree, T, Container, Compare>:: top() 
+template <int degree, class T, class container, class compare> 
+postorder_heap<degree, T, container, compare>::const_reference postorder_heap<degree, T, container, compare>:: top() 
 {   
     prioritised_root_index_ = sizes_.front() - 1;
     prioritised_root_size_ = sizes_.front();
@@ -219,40 +219,40 @@ postorder_heap<degree, T, Container, Compare>::const_reference postorder_heap<de
     return container_[prioritised_root_index_];
 }
 
-template <int degree, class T, class Container, class Compare> 
-T postorder_heap<degree, T, Container, Compare>::poll() 
+template <int degree, class T, class container, class compare> 
+T postorder_heap<degree, T, container, compare>::poll() 
 {
     T top = top();
     pop();
     return std::move(top);
 }
 
-template <int degree, class T, class Container, class Compare> 
-bool postorder_heap<degree, T, Container, Compare>::empty()
+template <int degree, class T, class container, class compare> 
+bool postorder_heap<degree, T, container, compare>::empty()
 {
     return container_.empty();
 }
 
-template <int degree, class T, class Container, class Compare> 
-postorder_heap<degree, T, Container, Compare>::size_type postorder_heap<degree, T, Container, Compare>::size() 
+template <int degree, class T, class container, class compare> 
+postorder_heap<degree, T, container, compare>::size_type postorder_heap<degree, T, container, compare>::size() 
 {
     return container_.size();
 }
 
-template <int degree, class T, class Container, class Compare> 
-void postorder_heap<degree, T, Container, Compare>::reserve(size_type new_cap) 
+template <int degree, class T, class container, class compare> 
+void postorder_heap<degree, T, container, compare>::reserve(size_type new_cap) 
 {
     container_.reserve(new_cap);
 }
 
-template <int degree, class T, class Container, class Compare> 
-void postorder_heap<degree, T, Container, Compare>::clear() 
+template <int degree, class T, class container, class compare> 
+void postorder_heap<degree, T, container, compare>::clear() 
 {
     container_.clear();
 }
 
-template <int degree, class T, class Container, class Compare> 
-void postorder_heap<degree, T, Container, Compare>::operator=(Container container) 
+template <int degree, class T, class container, class compare> 
+void postorder_heap<degree, T, container, compare>::operator=(container container) 
 {
     container_ = container;
 }
