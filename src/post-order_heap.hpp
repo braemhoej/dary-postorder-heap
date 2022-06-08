@@ -8,8 +8,6 @@
 // (FUN), 2004.
 // http://people.csail.mit.edu/nickh/Publications/PostOrderHeap/FUN04-PostOrderHeap.pdf
 //
-// Adapted by Nicolaj Kuno Bræmhøj for variable degree.
-// Contact: nicolaj (at) braemhoej (dot) me
 //
 
 #ifndef POSTORDER_HEAP_LIBRARY_HPP
